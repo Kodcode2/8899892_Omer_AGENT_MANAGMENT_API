@@ -36,19 +36,18 @@ namespace MossadApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task <IActionResult> updatestatus(int id)
+        public async Task <IActionResult> updatestatus(int id, Dictionary<string, string> dic)
         {
           Mission mission = await _context.Mission.FindAsync(id);
             if (mission == null) {
                 return BadRequest(400);
             }
-            mission
-
-
-
-
-
+            mission.Status = dic["status"];
+            await _context.Mission.SingleAsync();
+            return Ok(mission);
         }
+
+       
 
     }
 

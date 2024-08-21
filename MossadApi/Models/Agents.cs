@@ -12,8 +12,9 @@ namespace MossadApi.Models
 
         public string Name { get; set; }
 
-        [NotMapped]
-        public Dictionary<string, int> Location { get; set; }
+        public int X_axis { get; set; }
+
+        public int Y_axis { get; set; }
 
         public bool Active { get; set; } = false;
     }

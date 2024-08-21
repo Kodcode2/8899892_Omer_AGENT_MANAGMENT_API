@@ -12,14 +12,16 @@ namespace MossadApi.Controllers
     [ApiController]
     public class agentController : ControllerBase
     {
+        private readonly Icalculatlocation _icalculatlocation;
         private readonly DBContext _context;
         private readonly ILogger<agentController> _logger;
 
-        public agentController(ILogger<agentController> logger, DBContext context)
+        public agentController(ILogger<agentController> logger, DBContext context, Icalculatlocation icalculatlocation)
         {
 
             this._context = context;
             this._logger = logger;
+            this._icalculatlocation = icalculatlocation;
         }
         //שרת סימולציה בלבד
         [HttpPost]
@@ -43,14 +45,16 @@ namespace MossadApi.Controllers
 
         //שרת סימולציה בלבד
         [HttpPut("{id}/pin")]
-        public async Task<IActionResult> putlocation(int id, Agents newagent)
+        public async Task<IActionResult> putlocation(int id, Dictionary<string,int> location)
         {
-            Agents agent = _context.Agents.ToList().FirstOrDefault(a => a.Id == id);
+            Agents agent = await _context.Agents.FindAsync(id);
             if (agent == null)
             {
                 return StatusCode(StatusCodes.Status400BadRequest);
             }
             //agent.Location = newagent.Location;
+            agent.X_axis = location["x"];
+            agent.Y_axis = location["y"];
             await this._context.SaveChangesAsync();
             return StatusCode(200);
 
@@ -60,7 +64,7 @@ namespace MossadApi.Controllers
         [HttpPut("{id}/move")]
         public async Task<IActionResult> updatlocation(int id, [FromBody] Dictionary<string, string> move)
         {
-            Agents agent = _context.Agents.ToList().FirstOrDefault(a => a.Id == id);
+            Agents agent = await _context.Agents.FindAsync(id);
             if (agent == null)
             {
                 return StatusCode(StatusCodes.Status400BadRequest);
@@ -74,14 +78,11 @@ namespace MossadApi.Controllers
                 }
             }
             //ביצוע הזזה במטריצה 
+            agent =  _icalculatlocation.AgentLocation(agent, move);
 
-
-            return StatusCode(200);
+            return StatusCode(200, new {agent = agent});
 
         }
-
-
-
 
 
     }

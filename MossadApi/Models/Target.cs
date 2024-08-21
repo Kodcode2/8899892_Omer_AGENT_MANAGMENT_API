@@ -9,12 +9,14 @@ namespace MossadApi.Models
         [Key]
         public int Id { get; set; }
 
-        public string Name {  get; set; }
+        public string Name { get; set; }
 
         public string Description { get; set; }
-        [NotMapped]
-        public Dictionary<string, int> Location { get; set; }
-       
+
+        public int X_axis {  get; set; }
+
+        public int Y_axis { get; set; }
+
         public bool Alive = true;
     }
 }
