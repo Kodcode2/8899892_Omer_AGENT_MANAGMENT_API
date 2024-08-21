@@ -9,6 +9,7 @@ namespace MossadApi.Controllers
     [ApiController]
     public class TargetController : ControllerBase
     {
+        
         private readonly Icalculatlocation _icalculatlocation;
         private readonly DBContext _context;
         private readonly ILogger<TargetController> _logger;
@@ -23,12 +24,16 @@ namespace MossadApi.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> createtarget(Target target) 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public async Task<IActionResult> createtarget([FromBody] Target target)
         {
             this._context.Targets.Add(target);
             await this._context.SaveChangesAsync();
+          
+            await SetMission();
             return StatusCode
-                (StatusCodes.Status201Created, new { Response = true, agent = target });
+                (StatusCodes.Status201Created, new { Response = true, target = target });
         }
 
         [HttpGet]
@@ -47,10 +52,30 @@ namespace MossadApi.Controllers
             {
                 return StatusCode(StatusCodes.Status400BadRequest);
             }
-            target = _icalculatlocation.TargetLocation(target, move);   
+            target = _icalculatlocation.TargetLocation(target, move);
 
             return StatusCode(200, new { target = target });
 
+        }
+
+        public async Task SetMission()
+        {
+            var targets = await _context.Targets.ToListAsync();
+            var agents = await _context.Agents.ToListAsync();
+
+            foreach (var target in targets)
+            {
+                foreach (var agent in agents)
+                {
+                    if (Math.Sqrt(Math.Pow(target.X_axis - agent.X_axis, 2) + Math.Pow(target.Y_axis - agent.Y_axis, 2)) < 200)
+                    {
+                        Mission mission = new Mission();
+                        mission.Status = "possible";
+                        _context.Mission.Add(mission);
+                        await _context.SaveChangesAsync();  // שימוש ב-await כדי להמתין לסיום השמירה
+                    }
+                }
+            }
         }
     }
 }

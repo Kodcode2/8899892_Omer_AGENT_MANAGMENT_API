@@ -11,9 +11,9 @@ namespace MossadApi.Models
         public string Image { get; set; }
 
         public string Name { get; set; }
-
+        [Range(0, 1000)]
         public int X_axis { get; set; }
-
+        [Range (0, 1000)]
         public int Y_axis { get; set; }
 
         public bool Active { get; set; } = false;
