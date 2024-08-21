@@ -9,13 +9,13 @@ namespace MossadApi.DAL
         public DbSet<Agents> Agents { get; set; }
         public DbSet<Mission> Mission { get; set; }
         public DbSet<Target> Targets { get; set; }
-        public DbSet<Kill> Kill { get; set; }
+   
 
         public DBContext(DbContextOptions<DBContext> options)
         : base(options)
         {
             //Database.EnsureCreated();
-            if (Database.EnsureCreated() && Agents.Count() == 0 && Targets.Count() == 0 )
+            if (Database.EnsureCreated() && Agents.Count() == 0 )
             {
                 Seed();
             }
@@ -24,6 +24,7 @@ namespace MossadApi.DAL
 
         private void Seed()
         {
+           
         }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MossadApi.DAL;
+using MossadApi.Models;
 namespace MossadApi.Controllers
 {
     [Route("api/[controller]")]
@@ -17,5 +18,39 @@ namespace MossadApi.Controllers
             this._context = context;
             this._logger = logger;
         }
+
+
+        [HttpPost("update")]
+        public async Task<IActionResult> updatmission()
+        {
+            //לוגיקה
+            return Ok(200);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> getmissions()
+        {
+           var missions = await _context.Mission.ToListAsync();
+            return StatusCode(StatusCodes.Status200OK, new {missions = missions});
+        }
+
+        [HttpPut("{id}")]
+        public async Task <IActionResult> updatestatus(int id)
+        {
+          Mission mission = await _context.Mission.FindAsync(id);
+            if (mission == null) {
+                return BadRequest(400);
+            }
+            mission
+
+
+
+
+
+        }
+
     }
+
+    
 }

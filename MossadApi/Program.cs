@@ -25,15 +25,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseWhen(
-    context =>
-        context.Request.Path.StartsWithSegments("/api/attacks"),
-    appBuilder =>
-    {
-        appBuilder.UseMiddleware<AttackLoggingMiddleware>();
-        // appBuilder.UseMiddleware<JwtValidationToken>();
+//app.UseWhen(
+//    context =>
+//        context.Request.Path.StartsWithSegments("/api/attacks"),
+//    appBuilder =>
+//    {
+//        appBuilder.UseMiddleware<AttackLoggingMiddleware>();
+//        // appBuilder.UseMiddleware<JwtValidationToken>();
 
-    });
+//    });
 
 
 app.UseHttpsRedirection();

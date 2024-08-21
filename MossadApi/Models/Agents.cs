@@ -1,20 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MossadApi.Models
 {
     public class Agents
     {
-
         [Key]
         public int Id { get; set; }
 
-        //add image
+        public string Image { get; set; }
 
-        [Required]
         public string Name { get; set; }
-        [Required]
+
+        [NotMapped]
         public Dictionary<string, int> Location { get; set; }
-        [Required]
-        public bool Active = false;
+
+        public bool Active { get; set; } = false;
     }
 }
