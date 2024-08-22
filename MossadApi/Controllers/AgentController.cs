@@ -8,7 +8,7 @@ using MossadApi.Models;
 
 namespace MossadApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("/[controller]s")]
     [ApiController]
     public class agentController : ControllerBase
     {
@@ -32,7 +32,7 @@ namespace MossadApi.Controllers
             this._context.Agents.Add(agent);
             await this._context.SaveChangesAsync();
             return StatusCode
-                (StatusCodes.Status201Created, new { Response = true, agent = agent });
+                (StatusCodes.Status201Created);
         }
 
         //שרת סימולציה ומנהל בקרה

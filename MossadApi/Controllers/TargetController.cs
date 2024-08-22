@@ -5,18 +5,18 @@ using MossadApi.DAL;
 using MossadApi.Models;
 namespace MossadApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("/[controller]s")]
     [ApiController]
-    public class TargetController : ControllerBase
+    public class targetController : ControllerBase
     {
         
         private readonly Icalculatlocation _icalculatlocation;
         private readonly ISetmission _setmission;
        // private readonly SetMission setMission;
         private readonly DBContext _context;
-        private readonly ILogger<TargetController> _logger;
+        private readonly ILogger<targetController> _logger;
 
-        public TargetController(ILogger<TargetController> logger, DBContext context, Icalculatlocation icalculatlocation, ISetmission setmission)
+        public targetController(ILogger<targetController> logger, DBContext context, Icalculatlocation icalculatlocation, ISetmission setmission)
         {
 
             this._context = context;
@@ -24,6 +24,21 @@ namespace MossadApi.Controllers
             this._icalculatlocation = icalculatlocation;
             this._setmission = setmission;
            
+        }
+
+        [HttpPut("{id}/pin")]
+        public async Task<IActionResult> putlocation(int id, Dictionary<string, int> location)
+        {
+           Target target = await _context.Targets.FindAsync(id);
+            if (target == null)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            target.X_axis = location["x"];
+            target.Y_axis = location["y"];
+            await this._context.SaveChangesAsync();
+            return StatusCode(200);
+
         }
 
 
@@ -37,7 +52,7 @@ namespace MossadApi.Controllers
 
             _setmission.Set();
             return StatusCode
-                (StatusCodes.Status201Created, new { Response = true, target = target });
+                (StatusCodes.Status201Created, target );
         }
 
         [HttpGet]

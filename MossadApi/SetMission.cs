@@ -29,7 +29,6 @@ namespace MossadApi
                         mission.Status = "possible";
                         mission.AgentId = agent.Id;
                         mission.TargetId = target.Id;
-                        Console.WriteLine("abnb['samoi[eabmnoiabtno[abntrioi[tra  ", mission);
                         _context.Mission.Add(mission);
                     }
                     _context.SaveChanges();
