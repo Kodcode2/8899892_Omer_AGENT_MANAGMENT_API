@@ -11,15 +11,19 @@ namespace MossadApi.Controllers
     {
         
         private readonly Icalculatlocation _icalculatlocation;
+        private readonly ISetmission _setmission;
+       // private readonly SetMission setMission;
         private readonly DBContext _context;
         private readonly ILogger<TargetController> _logger;
 
-        public TargetController(ILogger<TargetController> logger, DBContext context, Icalculatlocation icalculatlocation)
+        public TargetController(ILogger<TargetController> logger, DBContext context, Icalculatlocation icalculatlocation, ISetmission setmission)
         {
 
             this._context = context;
             this._logger = logger;
-            _icalculatlocation = icalculatlocation;
+            this._icalculatlocation = icalculatlocation;
+            this._setmission = setmission;
+           
         }
 
 
@@ -30,8 +34,8 @@ namespace MossadApi.Controllers
         {
             this._context.Targets.Add(target);
             await this._context.SaveChangesAsync();
-          
-            await SetMission();
+
+            _setmission.Set();
             return StatusCode
                 (StatusCodes.Status201Created, new { Response = true, target = target });
         }
@@ -53,29 +57,9 @@ namespace MossadApi.Controllers
                 return StatusCode(StatusCodes.Status400BadRequest);
             }
             target = _icalculatlocation.TargetLocation(target, move);
-
+            
             return StatusCode(200, new { target = target });
 
-        }
-
-        public async Task SetMission()
-        {
-            var targets = await _context.Targets.ToListAsync();
-            var agents = await _context.Agents.ToListAsync();
-
-            foreach (var target in targets)
-            {
-                foreach (var agent in agents)
-                {
-                    if (Math.Sqrt(Math.Pow(target.X_axis - agent.X_axis, 2) + Math.Pow(target.Y_axis - agent.Y_axis, 2)) < 200)
-                    {
-                        Mission mission = new Mission();
-                        mission.Status = "possible";
-                        _context.Mission.Add(mission);
-                        await _context.SaveChangesAsync();  // שימוש ב-await כדי להמתין לסיום השמירה
-                    }
-                }
-            }
         }
     }
 }
