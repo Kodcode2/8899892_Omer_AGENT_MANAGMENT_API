@@ -15,7 +15,7 @@ namespace MossadApi.DAL
         : base(options)
         {
             //Database.EnsureCreated();
-            if (Database.EnsureCreated() && Agents.Count() == 0 )
+            if (Database.EnsureCreated()  )
             {
                 Seed();
             }

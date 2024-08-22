@@ -6,5 +6,6 @@ namespace MossadApi
     {
         Agents AgentLocation(Agents agents, Dictionary<string, string> dict);
         Target TargetLocation(Target target, Dictionary<string, string> dict);
+
     }
 }

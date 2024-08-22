@@ -23,7 +23,8 @@ namespace MossadApi.Controllers
         [HttpPost("update")]
         public async Task<IActionResult> updatmission()
         {
-            //לוגיקה
+            List<Mission> missions = await _context.Mission.ToListAsync();
+
             return Ok(200);
         }
 
@@ -43,7 +44,6 @@ namespace MossadApi.Controllers
                 return BadRequest(400);
             }
             mission.Status = "assigned";
-            //await _context.Mission.SingleAsync();
             await _context.SaveChangesAsync();
             return Ok();
         }

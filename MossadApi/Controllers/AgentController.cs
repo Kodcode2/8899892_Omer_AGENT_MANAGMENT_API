@@ -32,7 +32,7 @@ namespace MossadApi.Controllers
             this._context.Agents.Add(agent);
             await this._context.SaveChangesAsync();
             return StatusCode
-                (StatusCodes.Status201Created);
+                (StatusCodes.Status201Created, agent);
         }
 
         //שרת סימולציה ומנהל בקרה
@@ -52,7 +52,7 @@ namespace MossadApi.Controllers
             {
                 return StatusCode(StatusCodes.Status400BadRequest);
             }
-            //agent.Location = newagent.Location;
+           
             agent.X_axis = location["x"];
             agent.Y_axis = location["y"];
             await this._context.SaveChangesAsync();

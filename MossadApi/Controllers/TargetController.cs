@@ -72,7 +72,7 @@ namespace MossadApi.Controllers
                 return StatusCode(StatusCodes.Status400BadRequest);
             }
             target = _icalculatlocation.TargetLocation(target, move);
-            
+            await _context.SaveChangesAsync();
             return StatusCode(200, new { target = target });
 
         }

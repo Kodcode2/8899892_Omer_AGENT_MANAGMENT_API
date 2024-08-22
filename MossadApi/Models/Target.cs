@@ -14,8 +14,10 @@ namespace MossadApi.Models
         public string Position { get; set; }
 
         public string PhotoUrl { get; set; }
-
+        [Range(0, 1000)]
         public int X_axis {  get; set; }
+
+        [Range(0, 1000)]
 
         public int Y_axis { get; set; }
 
