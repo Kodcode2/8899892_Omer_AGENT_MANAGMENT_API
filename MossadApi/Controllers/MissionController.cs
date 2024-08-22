@@ -32,7 +32,7 @@ namespace MossadApi.Controllers
         public async Task<IActionResult> getmissions()
         {
            var missions = await _context.Mission.ToListAsync();
-            return StatusCode(StatusCodes.Status200OK, new {missions = missions});
+            return StatusCode(StatusCodes.Status200OK,  missions);
         }
 
         [HttpPut("{id}")]

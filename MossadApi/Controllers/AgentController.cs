@@ -39,10 +39,10 @@ namespace MossadApi.Controllers
         [HttpGet]
         public async Task<IActionResult> getagents()
         {
-            var attacks = await this._context.Agents.ToListAsync();
-            return StatusCode(StatusCodes.Status200OK, attacks);
+            var agents = await this._context.Agents.ToListAsync();
+            return StatusCode(StatusCodes.Status200OK, agents);
         }
-
+        
         //שרת סימולציה בלבד
         [HttpPut("{id}/pin")]
         public async Task<IActionResult> putlocation(int id, Dictionary<string,int> location)
