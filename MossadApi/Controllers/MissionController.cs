@@ -23,8 +23,15 @@ namespace MossadApi.Controllers
         [HttpPost("update")]
         public async Task<IActionResult> updatmission()
         {
-            List<Mission> missions = await _context.Mission.ToListAsync();
-
+            List<Mission> assigned = await _context.Mission
+            .Where(m => m.Status == "assigned")
+            .ToListAsync();
+            foreach (Mission mission in assigned)
+            {
+                Agents agents = await _context.Agents.FindAsync(mission.Id);
+                Target target = await _context.Targets.FindAsync(mission.Id);
+                
+            }
             return Ok(200);
         }
 
