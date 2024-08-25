@@ -5,7 +5,7 @@ namespace MossadApi
 {
     public  class calculation : Icalculatlocation
     {
-        public Agents AgentLocation(Agents agents, Dictionary<string,string> direction) 
+        public async Task<Agents> AgentLocation(Agents agents, Dictionary<string,string> direction) 
         {
             int x = agents.X_axis;
             int y = agents.Y_axis;
@@ -15,7 +15,7 @@ namespace MossadApi
             return agents;
         }
 
-        public Target TargetLocation(Target target, Dictionary<string, string> direction)
+        public async Task<Target> TargetLocation(Target target, Dictionary<string, string> direction)
         {
             int x = target.X_axis;
             int y = target.Y_axis;
@@ -25,7 +25,7 @@ namespace MossadApi
             return target;
         }
 
-        private List<int> caculat(int x, int y, Dictionary<string, string> direction )
+        private async Task <List<int>> caculat(int x, int y, Dictionary<string, string> direction )
         {
             switch (direction["direction"])
             {
@@ -65,7 +65,7 @@ namespace MossadApi
             return list;
         }
 
-        private double timetotarget(Target target, Agents agent)
+        public async Task<double> timetotarget(Target target, Agents agent)
         {
             int x = target.X_axis; 
             int y = target.Y_axis;
@@ -73,17 +73,63 @@ namespace MossadApi
             double timelaft = distans / 5;
             return timelaft;
         }
+
+
         //אתגר, מה להחזיר?
-        private double directioncalculation(Target target, Agents agent)
+        public async Task<Dictionary<string, string>> directioncalculation(Target target, Agents agent)
         {
-            int xtarget = target.X_axis;
-            int ytarget = target.Y_axis;
-            int xagent = agent.X_axis;
-            int yagent = agent.Y_axis;
-            if (xtarget == xagent && ytarget == yagent)
-            { 
-                 
+            int x = target.X_axis- agent.X_axis;
+            int y = target.Y_axis - agent.Y_axis;
+            Dictionary<string, string> direction = new Dictionary<string, string>();
+            string str;
+            switch (x)
+            {
+                case < 0:
+                    switch (y)
+                    {
+                        case < 0:
+                            str = "sw";
+                            break;
+                        case 0:
+                            str = "w";
+                            break;
+                        case > 0:
+                            str = "ne";
+                            break;
+                    }
+                    break;
+                case 0:
+                    switch (y)
+                    {
+                        case < 0:
+                            str = "s";
+                            break;
+                        case 0:
+                            str =  "touchdown";
+                            break;
+                        case > 0:
+                            str = "n";
+                            break;
+                    }
+                    break;
+                case > 0:
+                    switch (y)
+                    {
+                        case < 0:
+                            str = "se";
+                            break ;
+                        case 0:
+                            str = "e";
+                            break;
+                        case > 0:
+                            str = "ne";
+                            break;
+                    }
+                    break;
             }
+            direction["direction"] =  str;   
+            return  direction;
+
         }
     }
 }
