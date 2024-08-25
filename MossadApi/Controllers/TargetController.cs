@@ -12,7 +12,6 @@ namespace MossadApi.Controllers
         
         private readonly Icalculatlocation _icalculatlocation;
         private readonly ISetmission _setmission;
-       // private readonly SetMission setMission;
         private readonly DBContext _context;
         private readonly ILogger<targetController> _logger;
 
@@ -26,7 +25,9 @@ namespace MossadApi.Controllers
            
         }
 
-
+      
+        //שרת סימולציה בלבד
+        //איתחול מיקום המטרה
         [HttpPut("{id}/pin")]
         public async Task<IActionResult> putlocation(int id, Dictionary<string, int> location)
         {
@@ -42,8 +43,8 @@ namespace MossadApi.Controllers
 
         }
 
-
-
+        //שרת סימולציה בלבד
+        //יוצר מטרה
         [HttpPost]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -57,8 +58,8 @@ namespace MossadApi.Controllers
                 (StatusCodes.Status201Created, target );
         }
 
-
-
+        //גישה חופשית
+        //יוצר רשימת מטרות
         [HttpGet]
         public async Task<IActionResult> gettargets()
         {
@@ -70,6 +71,7 @@ namespace MossadApi.Controllers
 
 
         //שרת סימולציה בלבד
+        //מבצע תזוזה
         [HttpPut("{id}/move")]
         public async Task<IActionResult> updatlocation(int id, [FromBody] Dictionary<string, string> move)
         {

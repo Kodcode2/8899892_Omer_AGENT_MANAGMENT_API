@@ -35,7 +35,6 @@ namespace MossadApi.Controllers
                     Agents agents = await _context.Agents.FindAsync(mission.AgentId);
                     Target target = await _context.Targets.FindAsync(mission.TargetId);
                     agents = await _icalculatlocation.movment(target,agents);
-                    Dictionary<string, string> dict = await _icalculatlocation.directioncalculation(target, agents);
                     if (agents.X_axis == target.X_axis && agents.Y_axis == target.Y_axis)
                     {
                         mission.Status = "finish";
@@ -118,7 +117,7 @@ namespace MossadApi.Controllers
             details.Total_Targets = await _context.Targets.CountAsync();
             //details.Dead_Targets = await _context.Targets.Where(t => t.Alive == false).CountAsync();
             details.Ratio_Agents_To_Taegets = 1; // details.Total_Agents / details.Total_Targets;
-            details.Ratio_Possibal_Agents_To_Targets = await _context.Agents.Where(a => a.assigned == true).CountAsync();
+            details.Possibal_Agents_To_Targets = await _context.Agents.Where(a => a.assigned == true).CountAsync();
             return StatusCode(200, details);
         }
     }
