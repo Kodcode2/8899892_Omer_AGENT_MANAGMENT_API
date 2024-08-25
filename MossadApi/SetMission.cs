@@ -16,24 +16,30 @@ namespace MossadApi
 
         public void Set() 
         {
-            var targets = _context.Targets.ToList();
-            var agents = _context.Agents.ToList();
+            var targets = _context.Targets.
+                Where((t => t.Active == false)).
+                ToList();
+            var agents = _context.Agents.
+                Where(a => a.Active == false).
+                ToList();
 
             foreach (var target in targets)
             {
                 foreach (var agent in agents)
                 {
-                    if (Math.Sqrt(Math.Pow(target.X_axis - agent.X_axis, 2) + Math.Pow(target.Y_axis - agent.Y_axis, 2)) < 200)
+                    double distanse = Math.Sqrt(Math.Pow(target.X_axis - agent.X_axis, 2) + Math.Pow(target.Y_axis - agent.Y_axis, 2));
+                    if (distanse < 200)
                     {
                         Mission mission = new Mission();
-                        mission.Status = "possible";
                         mission.AgentId = agent.Id;
                         mission.TargetId = target.Id;
-                        _context.Mission.Add(mission);
+                        mission.TotalTime = distanse / 5;
+                        _context.Mission.Add(mission);                      
                     }
-                    _context.SaveChanges();
+                   
                 }
             }
+            _context.SaveChanges();
         }
     }
 }

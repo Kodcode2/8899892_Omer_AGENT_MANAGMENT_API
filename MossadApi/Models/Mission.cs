@@ -12,6 +12,6 @@ namespace MossadApi.Models
         public double TotalTime { get; set; }
 
         [AllowedValues("assigned", "finish", "pussible")]
-        public string Status { get; set; }
+        public string Status { get; set; } = "pussible";
     }
 }

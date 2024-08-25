@@ -15,13 +15,15 @@ namespace MossadApi.Controllers
         private readonly Icalculatlocation _icalculatlocation;
         private readonly DBContext _context;
         private readonly ILogger<agentController> _logger;
+        private readonly ISetmission _setmission;
 
-        public agentController(ILogger<agentController> logger, DBContext context, Icalculatlocation icalculatlocation)
+        public agentController(ILogger<agentController> logger, DBContext context, Icalculatlocation icalculatlocation, ISetmission setmission)
         {
 
             this._context = context;
             this._logger = logger;
             this._icalculatlocation = icalculatlocation;
+            _setmission = setmission;
         }
         //שרת סימולציה בלבד
         [HttpPost]
@@ -31,6 +33,7 @@ namespace MossadApi.Controllers
         {
             this._context.Agents.Add(agent);
             await this._context.SaveChangesAsync();
+            _setmission.Set();
             return StatusCode
                 (StatusCodes.Status201Created, agent);
         }
@@ -78,7 +81,7 @@ namespace MossadApi.Controllers
                 }
             }
             //ביצוע הזזה במטריצה 
-            agent =  _icalculatlocation.AgentLocation(agent, move);
+            agent =  await _icalculatlocation.AgentLocation(agent, move);
 
             return StatusCode(200, new {agent = agent});
 

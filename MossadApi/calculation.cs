@@ -9,7 +9,7 @@ namespace MossadApi
         {
             int x = agents.X_axis;
             int y = agents.Y_axis;
-            List<int> list = caculat(x, y,direction);
+            List<int> list = await caculat(x, y, direction);
             agents.X_axis = list[0];
             agents.Y_axis = list[1];
             return agents;
@@ -19,7 +19,7 @@ namespace MossadApi
         {
             int x = target.X_axis;
             int y = target.Y_axis;
-            List<int> list = caculat(x, y, direction);
+            List<int> list = await caculat(x, y, direction);
             target.X_axis = list[0];
             target.Y_axis = list[1];    
             return target;
@@ -78,58 +78,74 @@ namespace MossadApi
         //אתגר, מה להחזיר?
         public async Task<Dictionary<string, string>> directioncalculation(Target target, Agents agent)
         {
-            int x = target.X_axis- agent.X_axis;
-            int y = target.Y_axis - agent.Y_axis;
+            int x =  agent.X_axis - target.X_axis;
+            int y = agent.Y_axis - target.Y_axis;
             Dictionary<string, string> direction = new Dictionary<string, string>();
-            string str;
-            switch (x)
-            {
-                case < 0:
-                    switch (y)
-                    {
-                        case < 0:
-                            str = "sw";
-                            break;
-                        case 0:
-                            str = "w";
-                            break;
-                        case > 0:
-                            str = "ne";
-                            break;
-                    }
-                    break;
-                case 0:
-                    switch (y)
-                    {
-                        case < 0:
-                            str = "s";
-                            break;
-                        case 0:
-                            str =  "touchdown";
-                            break;
-                        case > 0:
-                            str = "n";
-                            break;
-                    }
-                    break;
-                case > 0:
-                    switch (y)
-                    {
-                        case < 0:
-                            str = "se";
-                            break ;
-                        case 0:
-                            str = "e";
-                            break;
-                        case > 0:
-                            str = "ne";
-                            break;
-                    }
-                    break;
-            }
-            direction["direction"] =  str;   
-            return  direction;
+            string str = "unknown";
 
+            if (x < 0 && y < 0)
+            {
+                str = "sw"; 
+            }
+            else if (x < 0 && y == 0)
+            {
+                str = "w"; 
+            }
+            else if (x < 0 && y < 0)
+            {
+                str = "nw"; 
+            }
+            else if (x == 0 && y > 0)
+            {
+                str = "s"; 
+            }
+            else if (x == 0 && y == 0)
+            {
+                str = "touchdown"; 
+            }
+            else if (x == 0 && y > 0)
+            {
+                str = "n"; 
+            }
+            else if (x > 0 && y < 0)
+            {
+                str = "se"; 
+            }
+            else if (x > 0 && y == 0)
+            {
+                str = "e";
+            }
+            else if (x > 0 && y > 0)
+            {
+                str = "ne"; 
+            }
+
+            direction["direction"] = str;
+            return direction;
+            
+        }
+
+
+        public async Task<Agents> movment(Target target, Agents agent)
+        {
+
+            if (agent.X_axis > target.X_axis)
+            {
+                agent.X_axis -= 1;
+            }
+            else if (agent.X_axis < target.X_axis)
+            {
+                agent.X_axis += 1;
+            }
+            if (agent.Y_axis > target.Y_axis)
+            {
+                agent.Y_axis -= 1;
+            }
+            else if (agent.Y_axis < target.Y_axis)
+            {
+                agent.Y_axis += 1;
+            }
+            return agent;
         }
     }
 }
