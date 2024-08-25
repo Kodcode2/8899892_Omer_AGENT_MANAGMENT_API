@@ -39,6 +39,7 @@ namespace MossadApi.Controllers
                     if (agents.X_axis == target.X_axis && agents.Y_axis == target.Y_axis)
                     {
                         mission.Status = "finish";
+                        mission.Timelaft = 0;
                         agents.Active = false;
                         target.Alive = false;
                     }
@@ -53,40 +54,7 @@ namespace MossadApi.Controllers
             return Ok(200);
         }
 
-        //[HttpPost("update")]
-        //public async Task<IActionResult> updatmission()
-        //{
-        //    List<Mission> assigned = await _context.Mission
-        //        .Where(m => m.Status == "assigned")
-        //        .ToListAsync();
-        //    if (assigned != null)
-        //    {
-        //        var tasks = assigned.Select(async mission =>
-        //        {
-        //            Agents agents = await _context.Agents.FindAsync(mission.AgentId);
-        //            Target target = await _context.Targets.FindAsync(mission.TargetId);
-        //            Dictionary<string, string> dict = await _icalculatlocation.directioncalculation(target, agents);
 
-        //            if (dict["direction"] == "touchdown")
-        //            {
-        //                mission.Status = "finish";
-        //                agents.Active = false;
-        //                target.Alive = false;
-        //            }
-        //            else
-        //            {
-        //                await _icalculatlocation.AgentLocation(agents, dict);
-        //                mission.Timelaft = await _icalculatlocation.timetotarget(target, agents);
-        //            }
-        //        }).ToList();
-
-        //       //await Task.WhenAll(tasks);
-
-        //        await _context.SaveChangesAsync();
-        //        return Ok(200);
-        //    }
-        //    else { return BadRequest(); }
-        //}
 
 
 
@@ -103,6 +71,7 @@ namespace MossadApi.Controllers
 
 
 
+
         [HttpPut("{id}")]
         public async Task <IActionResult> updatestatus(int id)
         {
@@ -111,11 +80,19 @@ namespace MossadApi.Controllers
                 return NotFound();
             }
             Agents agents = await _context.Agents.FindAsync(mission.AgentId);
-            agents.Active = true;
             Target target = await _context.Targets.FindAsync(mission.TargetId);
-            target.Active = true;
+
+            //ווידוא סופי שהמרחק מתאים לפני ההפעלה
+            double distence = await _icalculatlocation.timetotarget(target, agents);
+            if (distence * 5 > 200)
+            {
+                return BadRequest();
+               
+            }
 
             mission.Status = "assigned";
+            target.Active = true;
+            agents.Active = true;
             await _context.SaveChangesAsync();
 
             var missions = await _context.Mission.
@@ -130,9 +107,21 @@ namespace MossadApi.Controllers
             return Ok();
         }
 
-       
-
+        [HttpGet("meneger")]
+        public async Task<IActionResult> details()
+        {
+            Details details = new Details();
+            details.Total_Missions = await _context.Mission.CountAsync();
+            details.Active_Missions = await _context.Mission.Where(m => m.Status == "assigned").CountAsync();
+            details.Active_Agents = await _context.Agents.Where(a => a.Active == true).CountAsync();
+            details.Total_Agents = await _context.Agents.CountAsync();
+            details.Total_Targets = await _context.Targets.CountAsync();
+            //details.Dead_Targets = await _context.Targets.Where(t => t.Alive == false).CountAsync();
+            details.Ratio_Agents_To_Taegets = 1; // details.Total_Agents / details.Total_Targets;
+            details.Ratio_Possibal_Agents_To_Targets = await _context.Agents.Where(a => a.assigned == true).CountAsync();
+            return StatusCode(200, details);
+        }
     }
 
-    
+
 }

@@ -14,7 +14,7 @@ namespace MossadApi
             _context = context;
         }
 
-        public void Set() 
+        public async void Set() 
         {
             var targets = _context.Targets.
                 Where((t => t.Active == false)).
@@ -34,7 +34,8 @@ namespace MossadApi
                         mission.AgentId = agent.Id;
                         mission.TargetId = target.Id;
                         mission.TotalTime = distanse / 5;
-                        _context.Mission.Add(mission);                      
+                        _context.Mission.Add(mission);
+                        agent.assigned = true;
                     }
                    
                 }

@@ -74,58 +74,6 @@ namespace MossadApi
             return timelaft;
         }
 
-
-        //אתגר, מה להחזיר?
-        public async Task<Dictionary<string, string>> directioncalculation(Target target, Agents agent)
-        {
-            int x =  agent.X_axis - target.X_axis;
-            int y = agent.Y_axis - target.Y_axis;
-            Dictionary<string, string> direction = new Dictionary<string, string>();
-            string str = "unknown";
-
-            if (x < 0 && y < 0)
-            {
-                str = "sw"; 
-            }
-            else if (x < 0 && y == 0)
-            {
-                str = "w"; 
-            }
-            else if (x < 0 && y < 0)
-            {
-                str = "nw"; 
-            }
-            else if (x == 0 && y > 0)
-            {
-                str = "s"; 
-            }
-            else if (x == 0 && y == 0)
-            {
-                str = "touchdown"; 
-            }
-            else if (x == 0 && y > 0)
-            {
-                str = "n"; 
-            }
-            else if (x > 0 && y < 0)
-            {
-                str = "se"; 
-            }
-            else if (x > 0 && y == 0)
-            {
-                str = "e";
-            }
-            else if (x > 0 && y > 0)
-            {
-                str = "ne"; 
-            }
-
-            direction["direction"] = str;
-            return direction;
-            
-        }
-
-
         public async Task<Agents> movment(Target target, Agents agent)
         {
 

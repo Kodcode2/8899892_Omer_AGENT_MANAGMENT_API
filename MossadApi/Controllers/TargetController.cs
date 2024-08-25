@@ -26,6 +26,7 @@ namespace MossadApi.Controllers
            
         }
 
+
         [HttpPut("{id}/pin")]
         public async Task<IActionResult> putlocation(int id, Dictionary<string, int> location)
         {
@@ -56,12 +57,17 @@ namespace MossadApi.Controllers
                 (StatusCodes.Status201Created, target );
         }
 
+
+
         [HttpGet]
         public async Task<IActionResult> gettargets()
         {
             List<Target> targets = await _context.Targets.ToListAsync();
             return StatusCode(StatusCodes.Status200OK, targets);
         }
+
+
+
 
         //שרת סימולציה בלבד
         [HttpPut("{id}/move")]
@@ -72,6 +78,12 @@ namespace MossadApi.Controllers
             {
                 return StatusCode(StatusCodes.Status400BadRequest);
             }
+
+            if (target.Alive == false)
+            {
+                return BadRequest();
+            }
+
             target = await _icalculatlocation.TargetLocation(target, move);
             await _context.SaveChangesAsync();
             return StatusCode(200, new { target = target });
