@@ -14,6 +14,10 @@ namespace MossadApi
             _context = context;
         }
 
+
+
+
+        //מציע המשימות
         public async void Set() 
         {
             var targets = _context.Targets.
@@ -28,7 +32,7 @@ namespace MossadApi
                 foreach (var agent in agents)
                 {
                     double distanse = Math.Sqrt(Math.Pow(target.X_axis - agent.X_axis, 2) + Math.Pow(target.Y_axis - agent.Y_axis, 2));
-                    if (distanse < 200)
+                    if (distanse < 200 && distanse > 0)
                     {
                         Mission mission = new Mission();
                         mission.AgentId = agent.Id;
@@ -36,8 +40,7 @@ namespace MossadApi
                         mission.TotalTime = distanse / 5;
                         _context.Mission.Add(mission);
                         agent.assigned = true;
-                    }
-                   
+                    }                   
                 }
             }
             _context.SaveChanges();

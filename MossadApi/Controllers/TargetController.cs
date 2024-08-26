@@ -25,7 +25,23 @@ namespace MossadApi.Controllers
            
         }
 
-      
+        //שרת סימולציה בלבד
+        //יוצר מטרה
+        [HttpPost]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public async Task<IActionResult> createtarget([FromBody] Target target)
+        {
+            this._context.Targets.Add(target);
+            await this._context.SaveChangesAsync();
+
+            _setmission.Set();
+            return StatusCode
+                (StatusCodes.Status201Created, target);
+        }
+
+
+
         //שרת סימולציה בלבד
         //איתחול מיקום המטרה
         [HttpPut("{id}/pin")]
@@ -43,20 +59,7 @@ namespace MossadApi.Controllers
 
         }
 
-        //שרת סימולציה בלבד
-        //יוצר מטרה
-        [HttpPost]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> createtarget([FromBody] Target target)
-        {
-            this._context.Targets.Add(target);
-            await this._context.SaveChangesAsync();
-
-            _setmission.Set();
-            return StatusCode
-                (StatusCodes.Status201Created, target );
-        }
+        
 
         //גישה חופשית
         //יוצר רשימת מטרות

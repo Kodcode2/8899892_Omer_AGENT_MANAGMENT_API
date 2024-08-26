@@ -25,6 +25,7 @@ namespace MossadApi.Controllers
             this._icalculatlocation = icalculatlocation;
             _setmission = setmission;
         }
+
         //שרת סימולציה בלבד
         [HttpPost]
         [Produces("application/json")]
@@ -38,7 +39,10 @@ namespace MossadApi.Controllers
                 (StatusCodes.Status201Created, agent);
         }
 
+
+
         //שרת סימולציה ומנהל בקרה
+        //רשימת מטרות
         [HttpGet]
         public async Task<IActionResult> getagents()
         {
@@ -46,7 +50,10 @@ namespace MossadApi.Controllers
             return StatusCode(StatusCodes.Status200OK, agents);
         }
         
+
+
         //שרת סימולציה בלבד
+        //קביעת מיקום התחלתי
         [HttpPut("{id}/pin")]
         public async Task<IActionResult> putlocation(int id, Dictionary<string,int> location)
         {
@@ -60,10 +67,12 @@ namespace MossadApi.Controllers
             agent.Y_axis = location["y"];
             await this._context.SaveChangesAsync();
             return StatusCode(200);
-
         }
 
+
+
         //שרת סימולציה בלבד
+        //תזוזה
         [HttpPut("{id}/move")]
         public async Task<IActionResult> updatlocation(int id, [FromBody] Dictionary<string, string> move)
         {
@@ -72,14 +81,11 @@ namespace MossadApi.Controllers
             {
                 return StatusCode(StatusCodes.Status400BadRequest);
             }
-            List<Mission> missions = _context.Mission.ToList();
-            foreach (Mission mission in missions)
+            //הודעת שגיאה במקרה שהסוכן מצוות
+            if (agent.Active == true) 
             {
-                if (mission.AgentId == agent.Id)
-                {
-                    return StatusCode(StatusCodes.Status400BadRequest, new {messege = "the agent already in a mission"});
-                }
-            }
+                return StatusCode(StatusCodes.Status400BadRequest, new { messege = "the agent already in a mission" });
+            }          
             //ביצוע הזזה במטריצה 
             agent =  await _icalculatlocation.AgentLocation(agent, move);
 

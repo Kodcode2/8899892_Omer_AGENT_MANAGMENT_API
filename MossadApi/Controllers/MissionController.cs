@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MossadApi.DAL;
 using MossadApi.Models;
+using System.Collections.Concurrent;
+
 namespace MossadApi.Controllers
 {
     [Route("[controller]s")]
@@ -12,6 +14,7 @@ namespace MossadApi.Controllers
         private readonly DBContext _context;
         private readonly ILogger<MissionController> _logger;
         private readonly Icalculatlocation _icalculatlocation;
+        private ConcurrentQueue<Mission> Missions;
 
         public MissionController(ILogger<MissionController> logger, DBContext context, Icalculatlocation icalculatlocation)
         {
@@ -22,6 +25,17 @@ namespace MossadApi.Controllers
         }
 
 
+        //רשימת משימות
+        [HttpGet]
+        public async Task<IActionResult> getmissions()
+        {
+            var missions = await _context.Mission.
+                 ToListAsync();
+            return StatusCode(StatusCodes.Status200OK, missions);
+        }
+
+
+        //ביצוע תנועה לכיוון המטרה
         [HttpPost("update")]
         public async Task<IActionResult> updatmission()
         {
@@ -54,23 +68,7 @@ namespace MossadApi.Controllers
         }
 
 
-
-
-
-
-        [HttpGet]
-        public async Task<IActionResult> getmissions()
-        {
-           var missions = await _context.Mission.
-                ToListAsync();
-            return StatusCode(StatusCodes.Status200OK,  missions);
-        }
-
-
-
-
-
-
+        //הפעלת משימה
         [HttpPut("{id}")]
         public async Task <IActionResult> updatestatus(int id)
         {
@@ -105,6 +103,8 @@ namespace MossadApi.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
+
+
 
         [HttpGet("meneger")]
         public async Task<IActionResult> details()

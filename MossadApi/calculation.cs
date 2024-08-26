@@ -19,9 +19,12 @@ namespace MossadApi
         {
             int x = target.X_axis;
             int y = target.Y_axis;
-            List<int> list = await caculat(x, y, direction);
-            target.X_axis = list[0];
-            target.Y_axis = list[1];    
+            if (target.Alive == true)
+            {
+                List<int> list = await caculat(x, y, direction);
+                target.X_axis = list[0];
+                target.Y_axis = list[1];
+            }
             return target;
         }
 
@@ -31,31 +34,31 @@ namespace MossadApi
             {
                 case "nw":
                     y++;
-                    x++;
+                    x--;
                     break;
                 case "n":
                     y++;
                     break;
                 case "ne":
                     y++;
-                    x--;
-                    break;
-                case "w":
                     x++;
                     break;
-                case "e":
+                case "w":
                     x--;
+                    break;
+                case "e":
+                    x++;
                     break;
                 case "sw":
                     y--;
-                    x++;
+                    x--;
                     break;
                 case "s":
                     y--;
                     break;
                 case "se":
                     y--;
-                    x--;
+                    x++;
                     break;
                 default:
                     break;
