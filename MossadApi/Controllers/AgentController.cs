@@ -5,6 +5,7 @@ using MossadApi.DAL;
 
 using Microsoft.EntityFrameworkCore;
 using MossadApi.Models;
+using MossadApi.@interface;
 
 namespace MossadApi.Controllers
 {
@@ -33,8 +34,9 @@ namespace MossadApi.Controllers
         public async Task<IActionResult> CreateAgent([FromBody] Agents agent)
         {
             this._context.Agents.Add(agent);
+            await _setmission.Set();
             await this._context.SaveChangesAsync();
-            _setmission.Set();
+           
             return StatusCode
                 (StatusCodes.Status201Created, agent);
         }
@@ -54,6 +56,7 @@ namespace MossadApi.Controllers
 
         //שרת סימולציה בלבד
         //קביעת מיקום התחלתי
+        //יצירת משימה 
         [HttpPut("{id}/pin")]
         public async Task<IActionResult> putlocation(int id, Dictionary<string,int> location)
         {
@@ -62,9 +65,10 @@ namespace MossadApi.Controllers
             {
                 return StatusCode(StatusCodes.Status400BadRequest);
             }
-           
+            
             agent.X_axis = location["x"];
             agent.Y_axis = location["y"];
+           
             await this._context.SaveChangesAsync();
             return StatusCode(200);
         }

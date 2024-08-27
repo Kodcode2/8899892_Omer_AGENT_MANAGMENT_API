@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using MossadApi.DAL;
 using Microsoft.SqlServer;
-
+using MossadApi.middelwere.global;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
-using MossadApi;
+using MossadApi.@interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,15 +27,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.UseWhen(
-//    context =>
-//        context.Request.Path.StartsWithSegments("/api/attacks"),
-//    appBuilder =>
-//    {
-//        appBuilder.UseMiddleware<AttackLoggingMiddleware>();
-//        // appBuilder.UseMiddleware<JwtValidationToken>();
+app.UseWhen(
+    context =>
+        !context.Request.Path.StartsWithSegments("/Login"),
+    appBuilder =>
+    {
 
-//    });
+        appBuilder.UseMiddleware<JwtValidationToken>();
+
+    });
 
 
 app.UseHttpsRedirection();

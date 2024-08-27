@@ -7,24 +7,24 @@ using System.Text;
 using MossadApi.Models;
 namespace MossadApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
-    public class authController : ControllerBase
+    public class LoginController : ControllerBase
     {
 
 
         private string GenerateToken(string userIP)
         {
-            // token handler can create token
+         
             var tokenHandler = new JwtSecurityTokenHandler();
 
             string secretKey = "1234dyi5fjthgjdndfadsfgdsjfgj464twiyyd5ntyhgkdrue74hsf5ytsusefh55678"; //TODO: remove this from code
             byte[] key = Encoding.ASCII.GetBytes(secretKey);
 
-            // token descriptor describe HOW to create the token
+       
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                // things to include in the token
+               
                 Subject = new ClaimsIdentity(
                     new Claim[]
                     {
@@ -40,21 +40,20 @@ namespace MossadApi.Controllers
                     )
             };
 
-            // creating the token
+      
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            // converting the token to string
+         
             var tokenString = tokenHandler.WriteToken(token);
 
             return tokenString;
 
         }
 
-        [HttpPost("login")]
-        public IActionResult Login(Login loginObject)
+        [HttpPost]
+        public IActionResult Login(User user)
         {
 
-            if (loginObject.Username == "aaa" &&
-                loginObject.Password == "123")
+            if (user.Id == "SimulationServer" || user.Id == "MVC")
             {
 
                 string userIP = HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MossadApi.DAL;
+using MossadApi.@interface;
 using MossadApi.Models;
 namespace MossadApi.Controllers
 {
@@ -33,9 +34,8 @@ namespace MossadApi.Controllers
         public async Task<IActionResult> createtarget([FromBody] Target target)
         {
             this._context.Targets.Add(target);
-            await this._context.SaveChangesAsync();
-
-            _setmission.Set();
+           /// await _setmission.Set();
+            await this._context.SaveChangesAsync();           
             return StatusCode
                 (StatusCodes.Status201Created, target);
         }
@@ -54,6 +54,7 @@ namespace MossadApi.Controllers
             }
             target.X_axis = location["x"];
             target.Y_axis = location["y"];
+            await _setmission.Set();
             await this._context.SaveChangesAsync();
             return StatusCode(200);
 
@@ -84,12 +85,13 @@ namespace MossadApi.Controllers
                 return StatusCode(StatusCodes.Status400BadRequest);
             }
 
-            if (target.Alive == false)
+            if (target.Eliminated == true)
             {
                 return BadRequest();
             }
 
             target = await _icalculatlocation.TargetLocation(target, move);
+            await _setmission.chektarget(target);
             await _context.SaveChangesAsync();
             return StatusCode(200, new { target = target });
 

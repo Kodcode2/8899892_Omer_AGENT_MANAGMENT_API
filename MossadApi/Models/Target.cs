@@ -20,7 +20,7 @@ namespace MossadApi.Models
         [Range(0, 1000)]
         public int Y_axis { get; set; }
 
-        public bool Alive { get; set; } =  true;
+        public bool Eliminated { get; set; } =  false;
 
         public bool Active { get; set; } = false;
     }
